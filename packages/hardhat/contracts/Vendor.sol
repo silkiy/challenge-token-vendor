@@ -29,13 +29,13 @@ contract Vendor is Ownable {
         emit BuyTokens(msg.sender, msg.value, amountToBuy);
     }
 
-    // function withdraw() external onlyOwner {
-    //     uint256 ownerBalance = address(this).balance;
-    //     require(ownerBalance > 0, "No ETH to withdraw");
+    function withdraw() external onlyOwner {
+        uint256 ownerBalance = address(this).balance;
+        require(ownerBalance > 0, "No ETH to withdraw");
 
-    //     (bool sent, ) = msg.sender.call{ value: ownerBalance }("");
-    //     require(sent, "Failed to send Ether");
-    // }
+        (bool sent, ) = msg.sender.call{ value: ownerBalance }("");
+        require(sent, "Failed to send Ether");
+    }
 
     function sellTokens(uint256 tokenAmountToSell) external {
         require(tokenAmountToSell > 0, "Specify an amount of token to sell");
