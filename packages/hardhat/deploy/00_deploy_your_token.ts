@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-// import { Contract } from "ethers";
+import { Contract } from "ethers";
 
 /**
  * Deploys a contract named "YourToken" using the deployer account and
@@ -22,7 +22,7 @@ const deployYourToken: DeployFunction = async function (hre: HardhatRuntimeEnvir
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourToken", {
+  const deployment = await deploy("YourToken", {
     from: deployer,
     // Contract constructor arguments
     args: [],
@@ -32,8 +32,15 @@ const deployYourToken: DeployFunction = async function (hre: HardhatRuntimeEnvir
     autoMine: true,
   });
 
-  // Get the deployed contract
-  // const yourToken = await hre.ethers.getContract<Contract>("YourToken", deployer);
+  const yourToken = await hre.ethers.getContract<Contract>("YourToken", deployment.address);
+
+  console.log("======================================");
+  console.log("   YourToken deployed at:", deployment.address);
+  console.log("   Token name:   ", await yourToken.name());
+  console.log("   Token symbol: ", await yourToken.symbol());
+  console.log("   Total supply: ", (await yourToken.totalSupply()).toString());
+  console.log("   Deployer balance:", (await yourToken.balanceOf(deployer)).toString());
+  console.log("======================================");
 };
 
 export default deployYourToken;
